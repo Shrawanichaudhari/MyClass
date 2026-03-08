@@ -69,7 +69,7 @@ export async function GET(request: Request) {
         return NextResponse.json(fallbackQuestion);
     }
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Generator API Critical Error:", error);
     return NextResponse.json(fallbackQuestion);
   }

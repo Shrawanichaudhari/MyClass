@@ -44,10 +44,10 @@ export async function POST(request: Request) {
         model: "llama-3.3-70b-versatile",
         messages: [
           { role: "system", content: systemPrompt },
-          ...history.map((m: any) => ({
+          ...history.map((m: { role: string; text: string }) => ({
             role: m.role === 'user' ? 'user' : 'assistant',
             content: m.text || ''
-          })).slice(-10).filter((m: any) => m.content),
+          })).slice(-10).filter((m: { content: string }) => m.content),
           { role: "user", content: message }
         ],
         temperature: 0.7
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
       timestamp,
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Mentor API Critical Error:", error);
     return NextResponse.json(fallbackResponse);
   }
