@@ -1,4 +1,4 @@
-import * as tf from '@tensorflow/tfjs';
+// import * as tf from '@tensorflow/tfjs';
 import { StudentAnalytics } from './mockStudents';
 
 export type StudentLevel = 'Elite' | 'Rising Star' | 'Struggling' | 'At Risk';
@@ -22,11 +22,13 @@ export class StudentIntelligence {
     if (students.length < 4) return [];
 
     // 1. Prepare Features (Accuracy, Engagement, Consistency)
+    /*
     const features = students.map(s => [
       s.accuracy, 
       s.engagementTime / 20, // Normalize to 0-1 (max 20h)
       s.consistencyScore
     ]);
+    */
 
     // tf.tensor2d(features); // Logic moved to heuristic below
     

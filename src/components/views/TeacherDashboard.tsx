@@ -4,14 +4,14 @@ import { useState, useEffect } from 'react';
 import { useStore } from '@/lib/store';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
-  ScatterChart, Scatter, ZAxis, Cell, LineChart, Line, AreaChart, Area
+  ScatterChart, Scatter, ZAxis, Cell
 } from 'recharts';
-import { Users, AlertCircle, BookOpen, Brain, Zap, Search, Target, TrendingUp, X, CheckCircle2, ChevronRight, Wand2, Eye, User, LayoutGrid, List } from 'lucide-react';
-import { StudentIntelligence, ClusterResult, StudentLevel } from '@/lib/ml';
+import { AlertCircle, BookOpen, Brain, Zap, Search, Target, ChevronRight, LayoutGrid, List } from 'lucide-react';
+import { StudentIntelligence, ClusterResult } from '@/lib/ml';
 import { MOCK_STUDENTS, StudentAnalytics } from '@/lib/mockStudents';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import { MessageSquare, HeartHandshake } from 'lucide-react';
+import { HeartHandshake } from 'lucide-react';
 
 const SUBJECT_PERFORMANCE = [
   { topic: 'Algebra',      avg: 42, students: 35 },
@@ -43,7 +43,7 @@ export default function TeacherDashboard() {
   const { user, addNotification } = useStore();
   const [students, setStudents] = useState<StudentAnalytics[]>([]);
   const [clusters, setClusters] = useState<ClusterResult[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [activeTool, setActiveTool] = useState<string | null>(null);
   const [selectedCluster, setSelectedCluster] = useState<ClusterResult | null>(null);
   const [selectedStudent, setSelectedStudent] = useState<StudentAnalytics | null>(null);

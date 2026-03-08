@@ -1,4 +1,3 @@
-'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '@/lib/store';
@@ -8,7 +7,7 @@ import dynamic from 'next/dynamic';
 import confetti from 'canvas-confetti';
 import { StudentIntelligence } from '@/lib/ml';
 
-const ReactConfetti = dynamic(() => import('react-confetti'), { ssr: false });
+// const ReactConfetti = dynamic(() => import('react-confetti'), { ssr: false });
 
 export default function QuizView() {
   const { user, addXP, addNotification, updateMastery, awardBadge } = useStore();
@@ -27,55 +26,8 @@ export default function QuizView() {
   const [timeLeft, setTimeLeft] = useState(30);
   const [timerActive, setTimerActive] = useState(false);
 
-  // Fetch AI-generated questions
-  const fetchQuiz = useCallback(async () => {
-    setLoading(true);
-    try {
-      // ML Level Calculation
-      const { topicMastery, user } = useStore.getState();
-      const avgAccuracy = topicMastery.length > 0 
-        ? topicMastery.reduce((acc, t) => acc + t.score, 0) / topicMastery.length 
-        : 50;
-      
-      const level = StudentIntelligence.predictTrend({
-        id: user?.id || 'temp',
-        name: user?.name || 'User',
-        accuracy: avgAccuracy / 100,
-        completionRate: 0.8,
-        engagementTime: 5,
-        consistencyScore: 0.7,
-        topicsPerformance: Object.fromEntries(topicMastery.map(t => [t.topic, t.score]))
-      });
-
-      const res = await fetch(`/api/questions/quiz/generate?board=${user?.board}&grade=${user?.grade}&subject=General Mathematics&count=5&level=${level}`);
-      const data = await res.json();
-      if (Array.isArray(data) && data.length > 0 && data[0].question) {
-        setQuestions(data);
-        setTimerActive(true);
-      } else {
-        throw new Error("Invalid quiz data");
-      }
-    } catch (err) {
-      console.error(err);
-      addNotification("Failed to generate AI quiz. Please try again.", "warning");
-    } finally {
-      setLoading(false);
-    }
-  }, [user, addNotification]);
-
-  useEffect(() => {
-    if (user) fetchQuiz();
-  }, [user, fetchQuiz]);
-
-  // Timer logic
-  useEffect(() => {
-    if (!timerActive || answered || isComplete) return;
-    if (timeLeft === 0) { handleAnswer(-1); return; }
-    const t = setTimeout(() => setTimeLeft(p => p - 1), 1000);
-    return () => clearTimeout(t);
-  }, [timerActive, answered, isComplete, timeLeft]);
-
-  const handleAnswer = (idx: number) => {
+  // Handle Answer
+  const handleAnswer = useCallback((idx: number) => {
     if (answered || !questions[current]) return;
     setSelected(idx);
     setAnswered(true);
@@ -103,7 +55,57 @@ export default function QuizView() {
       updateMastery(q.topic, false);
     }
     setShowExplanation(true);
-  };
+  }, [answered, questions, current, showHint, addXP, updateMastery]);
+
+  // Fetch AI-generated questions
+  const fetchQuiz = useCallback(async () => {
+    setLoading(true);
+    try {
+      // ML Level Calculation
+      const { topicMastery, user } = useStore.getState();
+      const avgAccuracy = topicMastery.length > 0 
+        ? topicMastery.reduce((acc, t) => acc + t.score, 0) / topicMastery.length 
+        : 50;
+      
+      const level = StudentIntelligence.predictTrend({
+        id: user?.id || 'temp',
+        name: user?.name || 'User',
+        avatar: user?.avatar || '👤',
+        grade: user?.grade || 'Class 8',
+        accuracy: avgAccuracy / 100,
+        completionRate: 0.8,
+        engagementTime: 5,
+        consistencyScore: 0.7,
+        topicsPerformance: Object.fromEntries(topicMastery.map(t => [t.topic, t.score]))
+      });
+
+      const res = await fetch(`/api/questions/quiz/generate?board=${user?.board}&grade=${user?.grade}&subject=General Mathematics&count=5&level=${level}`);
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0 && data[0].question) {
+        setQuestions(data);
+        setTimerActive(true);
+      } else {
+        throw new Error("Invalid quiz data");
+      }
+    } catch (err) {
+      console.error(err);
+      addNotification("Failed to generate AI quiz. Please try again.", "warning");
+    } finally {
+      setLoading(false);
+    }
+  }, [addNotification]);
+
+  useEffect(() => {
+    if (user) fetchQuiz();
+  }, [user, fetchQuiz]);
+
+  // Timer logic
+  useEffect(() => {
+    if (!timerActive || answered || isComplete) return;
+    if (timeLeft === 0) { handleAnswer(-1); return; }
+    const t = setTimeout(() => setTimeLeft(p => p - 1), 1000);
+    return () => clearTimeout(t);
+  }, [timerActive, answered, isComplete, timeLeft, handleAnswer]);
 
   const nextQuestion = () => {
     if (current + 1 >= questions.length) {
