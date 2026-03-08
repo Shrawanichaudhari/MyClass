@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 import { useStore } from '@/lib/store';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
-  ScatterChart, Scatter, ZAxis, Cell
+  ScatterChart, Scatter, ZAxis, Cell, LineChart, Line, AreaChart, Area
 } from 'recharts';
-import { AlertCircle, BookOpen, Brain, Zap, Search, Target, ChevronRight, LayoutGrid, List } from 'lucide-react';
+import { AlertCircle, BookOpen, Brain, Zap, Search, Target, ChevronRight, LayoutGrid, List, MessageSquare, Wand2, Eye, User, X, CheckCircle2, TrendingUp, Users } from 'lucide-react';
 import { StudentIntelligence, ClusterResult } from '@/lib/ml';
 import { MOCK_STUDENTS, StudentAnalytics } from '@/lib/mockStudents';
 import { db } from '@/lib/firebase';
