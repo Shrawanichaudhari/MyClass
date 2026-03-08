@@ -28,7 +28,7 @@ export class StudentIntelligence {
       s.consistencyScore
     ]);
 
-    const data = tf.tensor2d(features);
+    // tf.tensor2d(features); // Logic moved to heuristic below
     
     // 2. Perform K-Means (Simplified 4-level clustering)
     // In a real app, we'd use a more robust K-Means library or custom TF logic
@@ -61,7 +61,7 @@ export class StudentIntelligence {
    */
   static getWeakAreas(student: StudentAnalytics): string[] {
     return Object.entries(student.topicsPerformance)
-      .filter(([_, score]) => score < 60)
+      .filter(([, score]) => score < 60)
       .map(([topic]) => topic);
   }
 

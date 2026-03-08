@@ -1,6 +1,6 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore, initializeFirestore, collection, writeBatch, doc } from "firebase/firestore";
+import { initializeFirestore, collection, writeBatch, doc } from "firebase/firestore";
 import { getAnalytics, isSupported } from "firebase/analytics";
 import { StudentAnalytics } from './mockStudents';
 

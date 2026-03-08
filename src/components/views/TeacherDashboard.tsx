@@ -21,6 +21,24 @@ const SUBJECT_PERFORMANCE = [
   { topic: 'Statistics',   avg: 71, students: 35 },
 ];
 
+interface ToolPairing {
+  student: StudentAnalytics;
+  topic: string;
+  mentor: StudentAnalytics;
+}
+
+interface ToolResult {
+  message?: string;
+  topic?: string;
+  questions?: number;
+  link?: string;
+  data?: { topic: string; count: number }[];
+  tips?: string[];
+  forecast?: number;
+  current?: number;
+  pairings?: ToolPairing[];
+}
+
 export default function TeacherDashboard() {
   const { user, addNotification } = useStore();
   const [students, setStudents] = useState<StudentAnalytics[]>([]);
@@ -32,7 +50,7 @@ export default function TeacherDashboard() {
   const [isReporting, setIsReporting] = useState(false);
   const [isClassReporting, setIsClassReporting] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
-  const [toolResult, setToolResult] = useState<any>(null);
+  const [toolResult, setToolResult] = useState<ToolResult | null>(null);
   const [processing, setProcessing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'clusters' | 'directory'>('clusters');
@@ -52,7 +70,7 @@ export default function TeacherDashboard() {
         analyticsSnapshot.forEach(doc => analyticsMap.set(doc.id, doc.data()));
 
         // Combine Users + Analytics
-        const combinedReal: StudentAnalytics[] = realUsers.map((u: any) => {
+        const combinedReal: StudentAnalytics[] = realUsers.map((u: { id: string; name?: string; avatar?: string; grade?: string }) => {
           const analytics = analyticsMap.get(u.id) || {};
           return {
             id: u.id,
@@ -140,7 +158,7 @@ export default function TeacherDashboard() {
       const forecast = StudentIntelligence.projectMastery(selectedCluster.students);
       setToolResult({ forecast, current: Math.round(selectedCluster.students.reduce((a,b)=>a+b.accuracy,0)/selectedCluster.students.length*100) });
     } else if (activeTool === 'Peer Connect' && selectedCluster) {
-      const pairings: any[] = [];
+      const pairings: ToolPairing[] = [];
       const struggling = selectedCluster.students.filter(s => s.accuracy < 0.6);
       struggling.slice(0, 5).forEach(s => {
         const mentors = StudentIntelligence.findMentors(s, students);
@@ -516,7 +534,7 @@ export default function TeacherDashboard() {
                        <div className="space-y-4">
                           <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1">Conceptual Struggles Found</div>
                           <div className="space-y-2">
-                             {toolResult.data.map((item: any, i: number) => (
+                             {toolResult?.data?.map((item: { topic: string; count: number }, i: number) => (
                                <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5 border-l-red-500/50">
                                   <div className="text-sm font-bold text-white">{item.topic}</div>
                                   <div className="text-xs font-black text-red-400 bg-red-400/10 px-3 py-1 rounded-full">{item.count} students struggling</div>
@@ -546,7 +564,7 @@ export default function TeacherDashboard() {
                            <div>
                               <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Projected End-of-Term Score</div>
                               <div className="text-7xl font-black text-white tracking-tighter">{toolResult.forecast}%</div>
-                              <div className="text-xs font-bold text-green-400 mt-2">Predicted improvement: +{toolResult.forecast - toolResult.current}%</div>
+                              <div className="text-xs font-bold text-green-400 mt-2">Predicted improvement: +{(toolResult.forecast || 0) - (toolResult.current || 0)}%</div>
                            </div>
                            <div className="h-48 w-full mt-4">
                               <ResponsiveContainer width="100%" height="100%">
@@ -569,7 +587,7 @@ export default function TeacherDashboard() {
                        <div className="space-y-4">
                           <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1">AI Suggested Study Pairings</div>
                           <div className="space-y-3">
-                             {toolResult.pairings.map((p: any, i: number) => (
+                             {toolResult?.pairings?.map((p: ToolPairing, i: number) => (
                                <div key={i} className="flex items-center justify-between p-4 rounded-3xl bg-white/5 border border-white/5">
                                   <div className="flex items-center gap-3">
                                      <span className="text-2xl">{p.student.avatar}</span>

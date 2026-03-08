@@ -74,15 +74,6 @@ interface AppState {
 const XP_PER_LEVEL = 500;
 const getLevel = (xp: number) => Math.floor(xp / XP_PER_LEVEL) + 1;
 
-const DEFAULT_USER: User = {
-  id: 'student-1',
-  name: 'Arjun Sharma',
-  email: 'arjun@myclass.edu',
-  role: 'student',
-  avatar: '🧑‍💻',
-  grade: 'Class 8',
-  board: 'CBSE',
-};
 
 const INITIAL_BADGES: Badge[] = [
   { id: 'first-correct', name: 'First Step', icon: '🎯', description: 'Answer your first question correctly', earned: true, earnedAt: '2024-01-01' },
