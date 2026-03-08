@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+'use client';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '@/lib/store';
 import { Question } from '@/lib/questions';

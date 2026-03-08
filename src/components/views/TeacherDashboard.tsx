@@ -1,17 +1,20 @@
 'use client';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
 import { useStore } from '@/lib/store';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   ScatterChart, Scatter, ZAxis, Cell, LineChart, Line, AreaChart, Area
 } from 'recharts';
-import { AlertCircle, BookOpen, Brain, Zap, Search, Target, ChevronRight, LayoutGrid, List, MessageSquare, Wand2, Eye, User, X, CheckCircle2, TrendingUp, Users } from 'lucide-react';
+import { 
+  AlertCircle, BookOpen, Brain, Zap, Search, Target, ChevronRight, 
+  LayoutGrid, List, MessageSquare, Wand2, Eye, User, X, CheckCircle2, 
+  TrendingUp, Users, HeartHandshake 
+} from 'lucide-react';
 import { StudentIntelligence, ClusterResult } from '@/lib/ml';
 import { MOCK_STUDENTS, StudentAnalytics } from '@/lib/mockStudents';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import { HeartHandshake } from 'lucide-react';
 
 const SUBJECT_PERFORMANCE = [
   { topic: 'Algebra',      avg: 42, students: 35 },
