@@ -77,7 +77,7 @@ export default function TeacherDashboard() {
 
         // Filter by teacher's grade
         const filtered = user?.grade && user?.grade !== 'N/A' 
-          ? merged.filter(s => s.grade === user.grade)
+          ? merged.filter(s => s.grade === user?.grade)
           : merged;
 
         setStudents(filtered);

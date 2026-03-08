@@ -44,7 +44,7 @@ export default function AIMentor() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '0', role: 'ai', timestamp: new Date().toLocaleTimeString(),
-      text: `Hello ${user.name.split(' ')[0]}! 👋 I'm your AI Mentor — available 24/7 to help you learn.\n\nYou can ask me about any subject, request concept explanations, get your personalized study plan, or find your weak areas. What would you like to explore today? 🚀`,
+      text: `Hello ${user?.name?.split(' ')[0] || 'Student'}! 👋 I'm your AI Mentor — available 24/7 to help you learn.\n\nYou can ask me about any subject, request concept explanations, get your personalized study plan, or find your weak areas. What would you like to explore today? 🚀`,
     }
   ]);
   const [input, setInput] = useState('');
@@ -92,7 +92,7 @@ export default function AIMentor() {
           <motion.div key={m.id} initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} transition={{delay:0.05*idx}}
             className={`flex gap-3 ${m.role === 'user' ? 'flex-row-reverse' : ''}`}>
             <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 ${m.role === 'ai' ? 'gradient-primary' : 'bg-white/10'}`}>
-              {m.role === 'ai' ? '🤖' : user.avatar}
+              {m.role === 'ai' ? '🤖' : user?.avatar || '👤'}
             </div>
             <div className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm space-y-1 ${
               m.role === 'ai' ? 'glass text-slate-200 rounded-tl-sm' : 'gradient-primary text-white rounded-tr-sm'

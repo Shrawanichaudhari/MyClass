@@ -32,18 +32,18 @@ export default function PracticeView() {
         : 50;
       
       const level = StudentIntelligence.predictTrend({
-        id: user.id || 'temp',
-        name: user.name || 'User',
+        id: user?.id || 'temp',
+        name: user?.name || 'User',
         avatar: '👤',
         accuracy: avgAccuracy / 100,
-        grade: user.grade || 'N/A',
+        grade: user?.grade || 'N/A',
         completionRate: 0.8,
         engagementTime: 5,
         consistencyScore: 0.7,
         topicsPerformance: Object.fromEntries(topicMastery.map(t => [t.topic, t.score]))
       });
 
-      fetch(`/api/questions/generate?topic=${encodeURIComponent(selectedTopic)}&board=${user.board}&grade=${user.grade}&level=${level}`)
+      fetch(`/api/questions/generate?topic=${encodeURIComponent(selectedTopic)}&board=${user?.board || 'CBSE'}&grade=${user?.grade || 'Class 8'}&level=${level}`)
         .then(res => res.ok ? res.json() : Promise.reject('API Error'))
         .then(data => {
             if (data && data.question) {

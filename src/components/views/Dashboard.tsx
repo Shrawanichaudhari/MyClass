@@ -70,7 +70,7 @@ export default function Dashboard() {
         });
 
         // Filter for same grade to find relevant peers
-        const sameGrade = user?.grade ? merged.filter(s => s.grade === user.grade) : merged;
+        const sameGrade = user?.grade ? merged.filter(s => s.grade === user?.grade) : merged;
         setStudents(sameGrade);
       } catch (err) {
         setStudents(MOCK_STUDENTS);
